@@ -1,7 +1,9 @@
 package com.sipc.events.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sipc.events.entity.param.DailyNewsParam;
+import com.sipc.events.entity.param.DailyNewsParam.DailyNewsParam;
+import com.sipc.events.entity.param.DailyNewsParam.NewsData;
+import com.sipc.events.entity.param.DailyNewsParam.TopStoriesData;
 import com.sipc.events.entity.param.MessageEventParam;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -28,7 +30,9 @@ public class DailyNewsService {
             HttpEntity responseEntity = response.getEntity();
             if (responseEntity != null) {
                 isGetNews = true;
-                dailyNewsParam = JSONObject.parseObject(EntityUtils.toString(responseEntity), DailyNewsParam.class);
+                String json= EntityUtils.toString(responseEntity);
+                json = json.substring(json.indexOf("{"),json.lastIndexOf("}")+1);
+                dailyNewsParam = JSONObject.parseObject(json, DailyNewsParam.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,11 +50,17 @@ public class DailyNewsService {
         }
         if(isGetNews){
             assert dailyNewsParam != null;
-            String str = dailyNewsParam.getWb().replaceAll("【换行】","\n");
-            str = str.substring(1);
-            StringBuilder sb =new StringBuilder();
-            sb.append("每日新闻：\n").append(str);
-            sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(sb), false);
+            StringBuilder param = new StringBuilder();
+            param.append("知乎日报：\n");
+            param.append("news:\n");
+            for (NewsData newsData:dailyNewsParam.getNews()){
+                param.append(newsData.getTitle()).append("\n").append(newsData.getShare_url()).append("\n");
+            }
+            param.append("top stories:\n");
+            for(TopStoriesData topStoriesData: dailyNewsParam.getTop_stories()){
+                param.append(topStoriesData.getTitle()).append("\n").append(topStoriesData.getShare_url()).append("\n");
+            }
+            sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(param), false);
         }
     }
 }

@@ -21,7 +21,6 @@ public class GlobalController {
             case "message":
                 messageController.messageHandler(MessageEventParaConvert(paramsMap));
                 break;
-
         }
     }
 }

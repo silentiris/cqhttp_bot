@@ -46,7 +46,7 @@ public class TodayInHistoryService {
         }
         if(isGetText){
             assert todayInHistoryParam != null;
-            String str = todayInHistoryParam.getWb().replaceAll("【换行】","\n");
+            String str = todayInHistoryParam.getWb().replaceAll("-.*?】","\n");
             str = str.substring(1);
             StringBuilder sb =new StringBuilder();
             sb.append("历史上的今天：\n").append(str);
