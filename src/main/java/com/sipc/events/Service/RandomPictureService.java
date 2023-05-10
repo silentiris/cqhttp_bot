@@ -2,23 +2,16 @@ package com.sipc.events.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sipc.events.entity.param.MessageEventParam;
-import com.sipc.events.entity.param.TodayInHistoryParam;
 import com.sipc.events.entity.param.randomPictureParam.RandomPictureData;
 import com.sipc.events.entity.param.randomPictureParam.RandomPictureParam;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
 import static com.sipc.common.eventCommon.FunParam.PICTURE_URL;
+import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 
 @Service
 public class RandomPictureService {
@@ -36,43 +29,20 @@ public class RandomPictureService {
                 if(i!= tagList.size()-1){sb.append("&");}
             }
             sb.append("&num=10");
-            RandomPictureParam randomPictureParam = null;
-            boolean isGetPicture = false;
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet;
+            boolean isGetPicture ;
+            String url;
             if(tag.equals("")){
-                httpGet = new HttpGet(PICTURE_URL);
+                url = PICTURE_URL;
             }else {
-                httpGet = new HttpGet(PICTURE_URL+sb);
+                url = PICTURE_URL+sb;
             }
-            CloseableHttpResponse response = null;
-            try {
-                response = httpClient.execute(httpGet);
-                HttpEntity responseEntity = response.getEntity();
-                if (responseEntity != null) {
-                    isGetPicture = true;
-                    randomPictureParam = JSONObject.parseObject(EntityUtils.toString(responseEntity), RandomPictureParam.class);
-                    if(randomPictureParam.getData().size()==0){
-                        sendGroupMsg(messageEventParam.getGroup_id(), "未找到图片",false);
-                        isGetPicture = false;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (httpClient != null) {
-                        httpClient. close();
-                    }
-                    if (response != null) {
-                        response.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            RandomPictureParam randomPictureParam = JSONObject.parseObject(sendHttpRequest(url), RandomPictureParam.class);
+            isGetPicture = true;
+            if(randomPictureParam.getData().size()==0){
+                sendGroupMsg(messageEventParam.getGroup_id(), "未找到图片",false);
+                isGetPicture = false;
             }
             if(isGetPicture){
-                assert randomPictureParam != null;
                 int index = (int) (randomPictureParam.getData().size()*Math.random());
                 if(index==randomPictureParam.getData().size()){index--;}
                 RandomPictureData randomPictureData = randomPictureParam.getData().get(index);

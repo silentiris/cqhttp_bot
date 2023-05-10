@@ -16,6 +16,8 @@ import java.net.URL;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 import static com.sipc.common.eventCommon.FunParam.*;
+import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
+
 @Service
 public class QueryWeatherService {
     public void queryWeather(MessageEventParam messageEventParam) {
@@ -40,29 +42,13 @@ public class QueryWeatherService {
         }
         System.out.println(city);
         if (!isWeek) {
-            boolean isGetWeather = false;
-            TodayWeatherParam todayWeatherParam = new TodayWeatherParam();
+            boolean isGetWeather;
             StringBuilder param = new StringBuilder("?city=" + city);
-            try {
-                URL url = new URL(WEATHER_URL + param);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Content-Type", "text/json;charset=utf-8");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder responseBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    responseBuilder.append(line);
-                }
-                String response = responseBuilder.toString();
-                isGetWeather = true;
-                todayWeatherParam = JSONObject.parseObject(response, TodayWeatherParam.class);
-                if (todayWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
-                    sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
-                    isGetWeather = false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            isGetWeather = true;
+            TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL + param), TodayWeatherParam.class);
+            if (todayWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
+                sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
+                isGetWeather = false;
             }
             if (isGetWeather) {
                 StringBuilder returnparam = new StringBuilder();
@@ -78,29 +64,12 @@ public class QueryWeatherService {
                 sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(returnparam), false);
             }
         } else {
-            WeekWeatherParam weekWeatherParam = new WeekWeatherParam();
-            boolean isGetWeather = false;
             StringBuilder param = new StringBuilder("?city=" + city + "&type=week");
-            try {
-                URL url = new URL(WEATHER_URL+param);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Content-Type", "text/json;charset=utf-8");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder responseBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    responseBuilder.append(line);
-                }
-                String response = responseBuilder.toString();
-                    isGetWeather = true;
-                    weekWeatherParam = JSONObject.parseObject(response, WeekWeatherParam.class);
-                    if (weekWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
-                        sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
-                        isGetWeather = false;
-                    }
-            } catch (Exception e) {
-                e.printStackTrace();
+            WeekWeatherParam weekWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL+param), WeekWeatherParam.class);
+            boolean isGetWeather = true;
+            if (weekWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
+                sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
+                isGetWeather = false;
             }
             if (isGetWeather) {
                 assert week != null;

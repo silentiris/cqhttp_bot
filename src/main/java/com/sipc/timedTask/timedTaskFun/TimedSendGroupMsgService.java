@@ -33,7 +33,7 @@ public class TimedSendGroupMsgService {
         if(time.getHour()==8){
             sendMorningGroupMsg();
         }
-        if(time.getHour()==19){
+        if(time.getHour()==22){
             sendNightGroupMsg();
         }
     }
@@ -98,6 +98,9 @@ public class TimedSendGroupMsgService {
                 .append("祝您一晚好梦！");
         LocalDateTime now = LocalDateTime.now();
         LocalDate date = now.toLocalDate();
-        sendPicture(date.toString()+" 60sNews",QUICKNEWS_URL,111074992, String.valueOf(msg),false);
+        for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
+            sendPicture(date.toString()+" 60sNews",QUICKNEWS_URL, groupInfo.getGroup_id(), String.valueOf(msg),false);
+
+        }
     }
 }

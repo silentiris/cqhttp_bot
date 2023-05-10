@@ -15,43 +15,16 @@ import java.io.IOException;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 import static com.sipc.common.eventCommon.FunParam.HISTORY_URL;
+import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
+
 @Service
 public class TodayInHistoryService {
     public void todayInHistory(MessageEventParam messageEventParam){
-        TodayInHistoryParam todayInHistoryParam = null;
-        boolean isGetText = false;
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet(HISTORY_URL);
-        CloseableHttpResponse response = null;
-        try {
-            response = httpClient.execute(httpGet);
-            HttpEntity responseEntity = response.getEntity();
-            if (responseEntity != null) {
-                isGetText = true;
-                todayInHistoryParam = JSONObject.parseObject(EntityUtils.toString(responseEntity), TodayInHistoryParam.class);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if(isGetText){
-            assert todayInHistoryParam != null;
-            String str = todayInHistoryParam.getWb().replaceAll("-.*?】","\n");
-            str = str.substring(1);
-            StringBuilder sb =new StringBuilder();
-            sb.append("历史上的今天：\n").append(str);
-            sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(sb), false);
-        }
+        TodayInHistoryParam todayInHistoryParam = JSONObject.parseObject(sendHttpRequest(HISTORY_URL), TodayInHistoryParam.class);
+        String str = todayInHistoryParam.getWb().replaceAll("-.*?】","\n");
+        str = str.substring(1);
+        StringBuilder sb =new StringBuilder();
+        sb.append("历史上的今天：\n").append(str);
+        sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(sb), false);
     }
-
 }
