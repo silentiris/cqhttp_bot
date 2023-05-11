@@ -28,6 +28,5 @@ public class SendHttpRequestUtil {
             e.printStackTrace();
             return null;
         }
-
     }
 }

@@ -6,5 +6,6 @@ public class FunParam {
     public static final String PICTURE_URL = "https://api.lolicon.app/setu/v2";
     public static final String WEATHER_URL = "https://api.vvhan.com/api/weather";
     public static final String WEATHER_FALSE = "false";
+    public static final int RANDOMPIC_FALSE = -1;
 
 }

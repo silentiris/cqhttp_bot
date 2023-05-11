@@ -3,6 +3,9 @@ package com.sipc.events.Service;
 import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 @Service
 public class GuideService {
@@ -10,7 +13,7 @@ public class GuideService {
         String msg = """
                 你好，我是一个qqBot；
                 如果需要我，请@我，并带上你所需要的请求的名称。
-                例：@忠国兔兔 知乎日报
+                例：@tuTubot 知乎日报
                 功能：
                 1.知乎日报 2.历史上的今天
                 3.搜图（输入“搜图说明”了解请求格式）

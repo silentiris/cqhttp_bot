@@ -10,8 +10,7 @@ import org.springframework.stereotype.Controller;
 public class TimedTask implements Runnable {
     @Autowired
     private TimedSendGroupMsgService timedSendGroupMsgService;
-    @Scheduled(cron = "0 0 8 * * ?")
-    @Scheduled(cron = "0 0 22 * * ?")
+    @Scheduled(cron = "0 0 8-22 * * ?")
     @Override
     public void run() {
         timedSendGroupMsgService.timedSendGroupMsg();

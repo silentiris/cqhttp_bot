@@ -4,5 +4,5 @@ public class GlobalCommon {
     //111074992
     //996233223
     public static final String BOT_ID = "2551600140";
-    public static final String BOT_NAME = "忠国兔兔";
+    public static final String BOT_NAME = "tuTubot";
 }

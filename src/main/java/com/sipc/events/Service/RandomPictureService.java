@@ -6,11 +6,14 @@ import com.sipc.events.entity.param.randomPictureParam.RandomPictureData;
 import com.sipc.events.entity.param.randomPictureParam.RandomPictureParam;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
 import static com.sipc.common.eventCommon.FunParam.PICTURE_URL;
+import static com.sipc.common.eventCommon.FunParam.RANDOMPIC_FALSE;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 
 @Service
@@ -25,7 +28,7 @@ public class RandomPictureService {
             StringBuilder sb = new StringBuilder();
             sb.append("?");
             for(int i = 0;i< tagList.size();i++) {
-                sb.append("tag=").append(tagList.get(i));
+                sb.append("tag=").append(URLEncoder.encode(tagList.get(i), StandardCharsets.UTF_8));
                 if(i!= tagList.size()-1){sb.append("&");}
             }
             sb.append("&num=10");
@@ -57,7 +60,9 @@ public class RandomPictureService {
                     }
                 }
                 msg.append("\n");
-                sendPicture(fileName,pictureUrl, messageEventParam.getGroup_id(), String.valueOf(msg),false);
+                if(sendPicture(fileName,pictureUrl, true,messageEventParam.getGroup_id(), String.valueOf(msg),false)==RANDOMPIC_FALSE){
+                    sendGroupMsg(messageEventParam.getGroup_id(),"图片发送失败",false);
+                }
             }
         }
     }
