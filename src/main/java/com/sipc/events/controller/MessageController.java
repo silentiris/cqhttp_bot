@@ -16,12 +16,12 @@ public class MessageController {
     @Autowired
     private DiodeBotService diodeBotService;
     public void messageHandler(MessageEventParam messageEventParam) {
-        diodeBotService.diodeBot(messageEventParam);
         messageEventParam.setMessage(messageEventParam.getMessage().replaceAll("\\s",""));
-        System.out.println("message received :"+messageEventParam.getMessage());
+        System.out.println("message received :\n"+messageEventParam.getMessage());
         messageEventParam.setMessage(ZhConverterUtil.toSimple(messageEventParam.getMessage()));
         if (messageEventParam.getMessage().contains("[CQ:at,qq="+BOT_ID+"]") || messageEventParam.getMessage().contains("@"+BOT_NAME)){
             customFunController.CustomFunHandler(messageEventParam);
         }
+        diodeBotService.diodeBot(messageEventParam);
     }
 }

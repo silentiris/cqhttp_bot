@@ -18,13 +18,12 @@ public class SendPictureUtil {
         StringBuilder sendMsgParam = new StringBuilder();
         sendMsgParam.append(message);
         sendMsgParam.append("[CQ:image,file=").append(fileName).append(",subType=0,url=").append(pictureUrl).append("]");
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         StringBuilder sb = new StringBuilder();
         sb.append("group_id=").append(group_id);
         System.out.println(sendMsgParam);
         sb.append("&message=").append(URLEncoder.encode(String.valueOf(sendMsgParam), StandardCharsets.UTF_8));
         sb.append("&auto_escape=").append(auto_escape);
-        if (useCache) {
+        if (!useCache) {
             sb.append("&cache=0");
         }
         SendGroupMsgParam sendGroupMsgParam = JSONObject.parseObject(sendHttpRequest("http://127.0.0.1:8077/send_group_msg?" + sb), SendGroupMsgParam.class);

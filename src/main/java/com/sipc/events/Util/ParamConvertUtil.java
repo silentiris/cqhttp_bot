@@ -11,7 +11,12 @@ public class ParamConvertUtil {
 //        messageEventParam.setSub_type((String) paramMap.get("sub_type"));
 //        messageEventParam.setRaw_message((String) paramMap.get("raw_message"));
 //        messageEventParam.setMessage_id((Integer) paramMap.get("message_id"));
-//        messageEventParam.setUser_id((Integer) paramMap.get("user_id"));
+        try {
+            messageEventParam.setUser_id((Long) paramMap.get("user_id"));
+        }catch (Exception e){
+            Integer integerId = ((Integer) paramMap.get("user_id"));
+            messageEventParam.setUser_id(integerId.longValue());
+        }
         messageEventParam.setMessage((String) paramMap.get("message"));
         messageEventParam.setGroup_id((Integer) paramMap.get("group_id"));
         return messageEventParam;

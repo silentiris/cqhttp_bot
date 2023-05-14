@@ -29,7 +29,7 @@ public class TimedSendGroupMsgService {
             sendNightGroupMsg();
         }else {
             sendHourlyMsg();
-            System.out.println(now.getHour());
+            System.out.println(now);
         }
     }
     public void sendMorningGroupMsg(){
@@ -58,14 +58,14 @@ public class TimedSendGroupMsgService {
         LocalDateTime now = LocalDateTime.now();
         LocalDate date = now.toLocalDate();
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
-            sendPicture(date.toString()+" 60sNews",QUICKNEWS_URL,true, groupInfo.getGroup_id(), String.valueOf(msg),false);
+            sendPicture(date.toString()+" 60sNews",QUICKNEWS_URL,false, groupInfo.getGroup_id(), String.valueOf(msg),false);
         }
     }
     public void sendHourlyMsg(){
         LocalDateTime now = LocalDateTime.now();
         StringBuilder msg = new StringBuilder();
         msg.append("tuTu为你报时啦！").append("\n")
-                .append("现在是").append(String.valueOf(now.getHour()+1).trim()).append("点").append("\n")
+                .append("现在是").append(String.valueOf(now.getHour()).trim()).append("点").append("\n")
                 .append("快去学习！！！");
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
             sendGroupMsg(groupInfo.getGroup_id(), String.valueOf(msg),false);
