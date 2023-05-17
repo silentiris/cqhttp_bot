@@ -3,6 +3,7 @@ package com.sipc.timedTask.timedTaskFun;
 import com.alibaba.fastjson.JSONObject;
 import com.sipc.api.entity.result.GroupInfo;
 import com.sipc.events.entity.param.WeatherParam.Today.TodayWeatherParam;
+import com.sipc.timedTask.entity.bingPicParam.BingPicParam;
 import com.sipc.timedTask.entity.dailyProverbParam.DailyProverbParam;
 import org.springframework.stereotype.Service;
 
@@ -33,32 +34,34 @@ public class TimedSendGroupMsgService {
         }
     }
     public void sendMorningGroupMsg(){
-        TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL), TodayWeatherParam.class);
+        TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL,true), TodayWeatherParam.class);
         String date = todayWeatherParam.getInfo().getDate();
         String week = todayWeatherParam.getInfo().getWeek();
         StringBuilder msg = new StringBuilder();
         date = date.replace("-"," ");
         msg.append("早上好！").append("\n")
                 .append ( "今天是：").append(date).append("   ").append(week).append("\n");
-        DailyProverbParam dailyProverbParam= JSONObject.parseObject(sendHttpRequest(DAILYPROVERB_URL), DailyProverbParam.class);
+        DailyProverbParam dailyProverbParam= JSONObject.parseObject(sendHttpRequest(DAILYPROVERB_URL,true), DailyProverbParam.class);
         msg.append(dailyProverbParam.getData().getZh()).append("\n");
         msg.append(dailyProverbParam.getData().getEn()).append("\n");
         msg.append("祝您度过美好的一天，心情愉悦！"+"\n");
+        BingPicParam bingPicParam = JSONObject.parseObject(sendHttpRequest(BINGPIC_URL,true), BingPicParam.class);
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
-            sendPicture(date+" bingPic",BINGPIC_URL,false, groupInfo.getGroup_id(), String.valueOf(msg),false);
+            sendPicture(date+"bingPic",bingPicParam.getData().getUrl(), groupInfo.getGroup_id(), String.valueOf(msg),false);
         }
     }
     public void sendNightGroupMsg(){
         StringBuilder msg = new StringBuilder();
         msg.append("现在是22:00,晚安！").append("\n").append("\n")
             .append("每日一言： ").append("\n")
-                .append(sendHttpRequest(SINGLEDAILYPROVERB_URL)).append("\n").append("\n")
+                .append(sendHttpRequest(SINGLEDAILYPROVERB_URL,true)).append("\n").append("\n")
                 .append("来看看今天的新闻吧！").append("\n")
                 .append("祝您一晚好梦！");
         LocalDateTime now = LocalDateTime.now();
         LocalDate date = now.toLocalDate();
+        String newsUrl = sendHttpRequest(QUICKNEWS_URL,false);
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
-            sendPicture(date.toString()+" 60sNews",QUICKNEWS_URL,false, groupInfo.getGroup_id(), String.valueOf(msg),false);
+            sendPicture(date.toString()+" 60sNews",newsUrl, groupInfo.getGroup_id(), String.valueOf(msg),false);
         }
     }
     public void sendHourlyMsg(){

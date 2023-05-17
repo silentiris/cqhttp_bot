@@ -13,8 +13,6 @@ import static com.sipc.common.globalCommon.GlobalCommon.BOT_NAME;
 @Controller
 public class CustomFunController {
     @Autowired
-    private PetController petController;
-    @Autowired
     private GuideService guideService;
     @Autowired
     private DailyNewsService dailyNewsService;
@@ -24,38 +22,63 @@ public class CustomFunController {
     private RandomPictureService randomPictureService;
     @Autowired
     private QueryWeatherService queryWeatherService;
+    @Autowired
+    private ChatGptService chatGptService;
+    @Autowired
+    private PetService petService;
+    @Autowired
+    private TimedSendGroupMsgService timedSendGroupMsgService;
 
     public void CustomFunHandler(MessageEventParam messageEventParam){
         String msg = messageEventParam.getMessage();
-        if (msg.equals("[CQ:at,qq="+BOT_ID+"]")||msg.equals("@"+BOT_NAME)){
+        if (msg.startsWith("/bot")){
             guideService.globalGuide(messageEventParam);
         }
-        else if(msg.equals("[CQ:at,qq="+BOT_ID+"]知乎日报")||msg.equals("@"+BOT_NAME+"知乎日报")){
+        else if(msg.startsWith("/知乎日报")){
             dailyNewsService.dailyNews(messageEventParam);
         }
-        else if(msg.equals("[CQ:at,qq="+BOT_ID+"]历史上的今天")||msg.equals("@"+BOT_NAME+"历史上的今天")){
+        else if(msg.startsWith("/历史上的今天")){
             todayInHistoryService.todayInHistory(messageEventParam);
         }
-        else if(msg.contains("[CQ:at,qq="+BOT_ID+"]搜图")||msg.contains("@"+BOT_NAME+"搜图")){
+        else if(msg.startsWith("/pic")){
             randomPictureService.RandomPicture(messageEventParam);
         }
-        else if(msg.contains("[CQ:at,qq="+BOT_ID+"]搜图说明")||msg.contains("@"+BOT_NAME+"搜图说明")){
+        else if(msg.startsWith("/picguide")){
             guideService.randomPictureGenerateGuide(messageEventParam.getGroup_id());
         }
-        else if(msg.equals("[CQ:at,qq="+BOT_ID+"]天气说明")||msg.contains("@"+BOT_NAME+"天气说明")){
+        else if(msg.startsWith("/天气说明")){
             guideService.weatherGuide(messageEventParam.getGroup_id());
         }
-        else if((msg.contains("[CQ:at,qq="+BOT_ID+"]天气")||msg.contains("@"+BOT_NAME+"天气"))&&!(msg.contains("[CQ:at,qq="+BOT_ID+"]天气说明")||msg.contains("@"+BOT_NAME+"天气说明"))){
+        else if(msg.startsWith("/天气")){
             queryWeatherService.queryWeather(messageEventParam);
+        }else if(msg.startsWith("/领养")){
+            petService.adoptPet(messageEventParam);
+        }else if (msg.startsWith("/改名")){
+            petService.changeName(messageEventParam);
+        }else if (msg.startsWith("/couple")){
+            petService.confess(messageEventParam);
+        } else if (msg.startsWith("/同意")) {
+            petService.promise(messageEventParam);
+        } else if (msg.startsWith("/贴贴")) {
+            petService.hug(messageEventParam);
+        } else if (msg.startsWith("/早安")) {
+            petService.punch(messageEventParam);
+        } else if (msg.startsWith("/分手")) {
+            petService.breakUp(messageEventParam);
+        }else if(msg.startsWith("/比划比划")){
+            petService.fight(messageEventParam);
+        }else if (msg.startsWith("/群兔兔排行")){
+            petService.selectGroupRank(messageEventParam);
+        }else if (msg.startsWith("/我的tutu")){
+            petService.selectMyPet(messageEventParam);
         }
-        else if(msg.equals("[CQ:at,qq="+BOT_ID+"]兔兔说明")||msg.contains("@"+BOT_NAME+"兔兔说明")){
+        else if(msg.startsWith("/兔兔说明")){
             guideService.petGuide(messageEventParam.getGroup_id());
         }
-        else if(msg.equals("[CQ:at,qq="+BOT_ID+"]兔兔规则")||msg.contains("@"+BOT_NAME+"兔兔规则")){
+        else if(msg.startsWith("兔兔规则")){
             guideService.petRuleGuide(messageEventParam.getGroup_id());
-        }
-        else if(msg.contains("[CQ:at,qq="+BOT_ID+"]兔兔")||msg.contains("@"+BOT_NAME+"兔兔")){
-            petController.petHandler(messageEventParam);
+        } else if(msg.startsWith("/tk")){
+            chatGptService.chatGptMsg(messageEventParam);
         }
     }
 }

@@ -27,7 +27,7 @@ public class SendMsgUtil {
         sb.append("group_id=").append(group_id);
         sb.append("&message=").append(URLEncoder.encode(message, StandardCharsets.UTF_8));
         sb.append("&auto_escape=").append(auto_escape);
-        SendGroupMsgParam sendGroupMsgParam = JSONObject.parseObject(sendHttpRequest("http://127.0.0.1:8077/send_group_msg?" + sb), SendGroupMsgParam.class);
+        SendGroupMsgParam sendGroupMsgParam = JSONObject.parseObject(sendHttpRequest("http://127.0.0.1:8077/send_group_msg?" + sb,true), SendGroupMsgParam.class);
         try{
             System.out.println( "send message :"+message);
             return Integer.parseInt(sendGroupMsgParam.getData().getMessage_id());

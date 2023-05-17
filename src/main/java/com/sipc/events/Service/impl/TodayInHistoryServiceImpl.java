@@ -12,7 +12,7 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
 public class TodayInHistoryServiceImpl implements TodayInHistoryService {
     public void todayInHistory(MessageEventParam messageEventParam){
-        TodayInHistoryParam todayInHistoryParam = JSONObject.parseObject(sendHttpRequest(HISTORY_URL), TodayInHistoryParam.class);
+        TodayInHistoryParam todayInHistoryParam = JSONObject.parseObject(sendHttpRequest(HISTORY_URL,true), TodayInHistoryParam.class);
         String str = todayInHistoryParam.getWb().replaceAll("-.*?】","\n");
         str = str.substring(1);
         StringBuilder sb =new StringBuilder();

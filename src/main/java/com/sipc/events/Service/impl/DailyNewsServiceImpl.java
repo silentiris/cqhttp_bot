@@ -14,7 +14,7 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
 public class DailyNewsServiceImpl implements DailyNewsService {
     public void dailyNews(MessageEventParam messageEventParam) {
-        String json= sendHttpRequest(NEWS_URL);
+        String json= sendHttpRequest(NEWS_URL,true);
         assert json != null;
         json = json.substring(json.indexOf("{"),json.lastIndexOf("}")+1);
         DailyNewsParam dailyNewsParam = JSONObject.parseObject(json, DailyNewsParam.class);

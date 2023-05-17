@@ -40,7 +40,7 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
             boolean isGetWeather;
             StringBuilder param = new StringBuilder("?city=" + city);
             isGetWeather = true;
-            TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL + param), TodayWeatherParam.class);
+            TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL + param,true), TodayWeatherParam.class);
             if (todayWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
                 sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
                 isGetWeather = false;
@@ -56,11 +56,12 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                         .append("风力：").append(todayWeatherInfo.getFengli()).append("，")
                         .append("PM2.5: ").append(todayWeatherInfo.getAir().getPm25()).append("\n");
                 returnparam.append("tip:").append(todayWeatherInfo.getTip());
-                sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(returnparam), false);
+                String s = String.valueOf(returnparam).replace("-"," ");
+                sendGroupMsg(messageEventParam.getGroup_id(), s, false);
             }
         } else {
             StringBuilder param = new StringBuilder("?city=" + city + "&type=week");
-            WeekWeatherParam weekWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL+param), WeekWeatherParam.class);
+            WeekWeatherParam weekWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL+param,true), WeekWeatherParam.class);
             boolean isGetWeather = true;
             if (weekWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
                 sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
@@ -85,7 +86,8 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                         returnparam.append("最低:").append(weekWeatherData.getLow()).append("，")
                                 .append("最高:").append(weekWeatherData.getHigh()).append("，")
                                 .append("风力：").append(weekWeatherData.getFengli());
-                        sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(returnparam), false);
+                        String s = String.valueOf(returnparam).replace("-"," ");
+                        sendGroupMsg(messageEventParam.getGroup_id(), s, false);
                     }
                 }else {
                     StringBuilder returnParam = new StringBuilder();
@@ -98,7 +100,8 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                                 .append("最高:").append(weekWeatherData.getHigh()).append("，")
                                 .append("风力：").append(weekWeatherData.getFengli()).append("\n");
                     }
-                    sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(returnParam), false);
+                    String s = String.valueOf(returnParam).replace("-"," ");
+                    sendGroupMsg(messageEventParam.getGroup_id(), s, false);
                 }
             }
         }

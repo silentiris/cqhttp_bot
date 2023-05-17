@@ -1,6 +1,7 @@
 package com.sipc.events.controller;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
+import com.sipc.events.Service.ChatGptService;
 import com.sipc.events.Service.DiodeBotService;
 import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class MessageController {
         messageEventParam.setMessage(messageEventParam.getMessage().replaceAll("\\s",""));
         System.out.println("message received :\n"+messageEventParam.getMessage());
         messageEventParam.setMessage(ZhConverterUtil.toSimple(messageEventParam.getMessage()));
-        if (messageEventParam.getMessage().contains("[CQ:at,qq="+BOT_ID+"]") || messageEventParam.getMessage().contains("@"+BOT_NAME)){
+        if (messageEventParam.getMessage().startsWith("/")){
             customFunController.CustomFunHandler(messageEventParam);
         }
         diodeBotService.diodeBot(messageEventParam);

@@ -61,7 +61,7 @@ public class PetServiceImpl implements PetService {
     public void confess(MessageEventParam messageEventParam) {
         //remember to restrain formation!!! 兔兔表白[CQ:at,qq=)
         String message = messageEventParam.getMessage();
-        String petCouple = message.substring(message.indexOf("兔兔couple[CQ:at,qq=")+"兔兔couple[CQ:at,qq=".length(),message.length()-1);
+        String petCouple = message.substring(message.indexOf("couple[CQ:at,qq=")+"couple[CQ:at,qq=".length(),message.length()-1);
         try{
             System.out.println(petCouple);
             Integer.parseInt(petCouple);
@@ -93,7 +93,7 @@ public class PetServiceImpl implements PetService {
     @Override
     public void promise(MessageEventParam messageEventParam) {
         String message = messageEventParam.getMessage();
-        Long confessPetId = Long.parseLong(message.substring(message.indexOf("兔兔同意[CQ:at,qq=")+"兔兔同意[CQ:at,qq=".length(),message.length()-1));
+        Long confessPetId = Long.parseLong(message.substring(message.indexOf("同意[CQ:at,qq=")+"同意[CQ:at,qq=".length(),message.length()-1));
         QueryWrapper<PetPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", confessPetId);
         queryWrapper.eq("group_id", messageEventParam.getGroup_id());
@@ -218,7 +218,7 @@ public class PetServiceImpl implements PetService {
             return;
         }
         String message = messageEventParam.getMessage();
-        Long enemyPetId = Long.parseLong(message.substring(message.indexOf("兔兔比划比划[CQ:at,qq=")+"兔兔比划比划[CQ:at,qq=".length(),message.length()-1));
+        Long enemyPetId = Long.parseLong(message.substring(message.indexOf("比划比划[CQ:at,qq=")+"比划比划[CQ:at,qq=".length(),message.length()-1));
         QueryWrapper<PetPO> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("user_id",enemyPetId);
         queryWrapper2.eq("group_id", messageEventParam.getGroup_id());

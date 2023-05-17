@@ -20,7 +20,7 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 public class RandomPictureServiceImpl implements RandomPictureService {
     public void RandomPicture(MessageEventParam messageEventParam){
         String tag = messageEventParam.getMessage();
-        tag = tag.substring(tag.indexOf("图")+1);
+        tag = tag.substring(tag.indexOf("c")+1);
         tag = tag.replaceAll("amp;","");
         List<String> tagList = List.of(tag.split("，"));
         if(tagList.size()>3){sendGroupMsg(messageEventParam.getGroup_id(),"参数有误",false);}
@@ -39,7 +39,7 @@ public class RandomPictureServiceImpl implements RandomPictureService {
             }else {
                 url = PICTURE_URL+sb;
             }
-            RandomPictureParam randomPictureParam = JSONObject.parseObject(sendHttpRequest(url), RandomPictureParam.class);
+            RandomPictureParam randomPictureParam = JSONObject.parseObject(sendHttpRequest(url,true), RandomPictureParam.class);
             isGetPicture = true;
             if(randomPictureParam.getData().size()==0){
                 sendGroupMsg(messageEventParam.getGroup_id(), "未找到图片",false);
@@ -60,7 +60,7 @@ public class RandomPictureServiceImpl implements RandomPictureService {
                     }
                 }
                 msg.append("\n");
-                if(sendPicture(fileName,pictureUrl, true,messageEventParam.getGroup_id(), String.valueOf(msg),false)==RANDOMPIC_FALSE){
+                if(sendPicture(fileName,pictureUrl, messageEventParam.getGroup_id(), String.valueOf(msg),false)==RANDOMPIC_FALSE){
                     sendGroupMsg(messageEventParam.getGroup_id(),"图片发送失败",false);
                 }
             }
