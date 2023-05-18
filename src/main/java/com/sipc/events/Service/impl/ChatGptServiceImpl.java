@@ -19,7 +19,7 @@ public class ChatGptServiceImpl implements ChatGptService {
         Proxy proxy = Proxys.http("127.0.0.1", 7890);
 
         ChatGPT chatGPT = ChatGPT.builder()
-                .apiKey("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")
+                .apiKey("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")
                 .proxy(proxy)
                 .apiHost("https://api.openai.com/") //反向代理地址
                 .build()

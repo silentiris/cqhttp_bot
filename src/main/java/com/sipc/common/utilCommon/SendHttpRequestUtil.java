@@ -18,9 +18,7 @@ public class SendHttpRequestUtil {
         try {
             URL url = new URL(urlParam);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if(!autoJump){
-                connection.setInstanceFollowRedirects(false);
-            }
+            connection.setInstanceFollowRedirects(autoJump);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "text/json;charset=utf-8");
             // 获取响应头

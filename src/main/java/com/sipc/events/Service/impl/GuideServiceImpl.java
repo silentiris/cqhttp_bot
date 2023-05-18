@@ -4,8 +4,6 @@ import com.sipc.events.Service.GuideService;
 import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.stereotype.Service;
 
-import java.lang.management.GarbageCollectorMXBean;
-
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 @Service
 public class GuideServiceImpl implements GuideService {
@@ -13,7 +11,7 @@ public class GuideServiceImpl implements GuideService {
         String msg = """
                 你好，我是一个qqBot；
                 如果需要我，请按照下面的格式唤醒我。
-                例：/chat 你喜欢周杰伦吗？
+                例：/tk 如何评价周杰伦？
                 功能：
                 1./知乎日报 2./历史上的今天
                 3./pic（输入“/picguide”了解请求格式）
