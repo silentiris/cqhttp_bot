@@ -17,7 +17,8 @@ public class GuideServiceImpl implements GuideService {
                 3./pic（输入“/picguide”了解请求格式）
                 4./天气（输入“/天气说明”了解请求格式）
                 5./tk
-                6. tutu类指令请参考"/兔兔说明"
+                6./aipic (ai绘图)
+                7. tutu类指令请参考"/兔兔说明"
                 """;
         sendGroupMsg(messageEventParam.getGroup_id(), msg, false);
     }

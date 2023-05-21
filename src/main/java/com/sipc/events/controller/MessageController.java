@@ -7,9 +7,6 @@ import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import static com.sipc.common.globalCommon.GlobalCommon.BOT_ID;
-import static com.sipc.common.globalCommon.GlobalCommon.BOT_NAME;
-
 @Controller
 public class MessageController {
     @Autowired

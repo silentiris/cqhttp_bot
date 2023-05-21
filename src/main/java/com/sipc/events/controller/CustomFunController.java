@@ -7,9 +7,6 @@ import com.sipc.timedTask.timedTaskFun.TimedSendGroupMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import static com.sipc.common.globalCommon.GlobalCommon.BOT_ID;
-import static com.sipc.common.globalCommon.GlobalCommon.BOT_NAME;
-
 @Controller
 public class CustomFunController {
     @Autowired
@@ -79,6 +76,8 @@ public class CustomFunController {
             guideService.petRuleGuide(messageEventParam.getGroup_id());
         } else if(msg.startsWith("/tk")){
             chatGptService.chatGptMsg(messageEventParam);
+        } else if (msg.startsWith("/aipic")) {
+            chatGptService.aiDraw(messageEventParam);
         }
     }
 }
