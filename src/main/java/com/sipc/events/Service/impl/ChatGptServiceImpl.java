@@ -26,8 +26,8 @@ import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
 
 @Service
 public class ChatGptServiceImpl implements ChatGptService {
-    @Value("${openai.api}")
-    private String api;
+    @Value("${openai.key}")
+    private String openaiKey;
     @Override
     public void chatGptMsg(MessageEventParam messageEventParam) {
         System.out.println(messageEventParam);
@@ -45,7 +45,7 @@ public class ChatGptServiceImpl implements ChatGptService {
                 .build();
         //构建客户端
         OpenAiClient openAiClient = OpenAiClient.builder()
-                .apiKey(Arrays.asList(api))
+                .apiKey(Arrays.asList(openaiKey))
                 //自定义key的获取策略：默认KeyRandomStrategy
                 .keyStrategy(new KeyRandomStrategy())
                 //.keyStrategy(new FirstKeyStrategy())
@@ -81,7 +81,7 @@ public class ChatGptServiceImpl implements ChatGptService {
                 .build();
         //构建客户端
         OpenAiClient openAiClient = OpenAiClient.builder()
-                .apiKey(Arrays.asList("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"))
+                .apiKey(Arrays.asList(openaiKey))
                 //自定义key的获取策略：默认KeyRandomStrategy
                 .keyStrategy(new KeyRandomStrategy())
                 //.keyStrategy(new FirstKeyStrategy())
