@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
 
 import static com.sipc.api.apiUtil.GetGroupInfoUtil.getGroupMemberInfo;
@@ -164,10 +165,12 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
             }
         }
         if(message.contains("[CQ:image,")){
+            commentMsg = commentMsg.substring(0,message.indexOf("[CQ:image,")-3);
             picUrl = message.substring(message.indexOf(",url=")+",url=".length(),message.length()-1);
             fileName = minioUtil.uploadFileWithNetFile(picUrl);
         }
         //set date
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
         Date currentTime = new Date();
         String date = currentTime.toString();
 
@@ -217,7 +220,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
         StringBuilder msg = new StringBuilder();
         msg.append("评论：").append("\n");
         for(BottleCommentPo bottleCommentPo:bottleCommentPos){
-            msg.append(bottleCommentPo.getDate().substring(0,bottleCommentPo.getDate().indexOf("GMT+")-1)).append("\n");
+            msg.append(bottleCommentPo.getDate().substring(0,bottleCommentPo.getDate().indexOf("GMT+")-4)).append("\n");
             msg.append(bottleCommentPo.getCommenterName()).append(":").append("\n");
             msg.append(bottleCommentPo.getCommentMsg()).append("\n");
             if(!("0".equals(bottleCommentPo.getCommentPicUrl()))){

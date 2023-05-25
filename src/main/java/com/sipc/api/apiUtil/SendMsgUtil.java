@@ -20,12 +20,14 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 
 @Service
 public class SendMsgUtil {
     public static int sendGroupMsg(int group_id,String message,boolean auto_escape) {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
         Date currentTime = new Date();
         String date = currentTime.toString();
         StringBuilder sb = new StringBuilder();
@@ -41,6 +43,7 @@ public class SendMsgUtil {
         }
     }
     public static int sendPrivateMsg(long user_id,String message,boolean auto_escape){
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
         Date currentTime = new Date();
         String date = currentTime.toString();
         StringBuilder sb = new StringBuilder();

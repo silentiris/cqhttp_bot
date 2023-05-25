@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Controller
 public class MessageController {
@@ -18,6 +19,7 @@ public class MessageController {
     @Autowired
     private DiodeBotService diodeBotService;
     public void messageHandler(MessageEventParam messageEventParam) {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
         Date currentTime = new Date();
         String date = currentTime.toString();
         messageEventParam.setMessage(messageEventParam.getMessage().replaceAll("\\s",""));
