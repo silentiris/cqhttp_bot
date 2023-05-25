@@ -64,7 +64,7 @@ public class PetServiceImpl implements PetService {
         String petCouple = message.substring(message.indexOf("couple[CQ:at,qq=")+"couple[CQ:at,qq=".length(),message.length()-1);
         try{
             System.out.println(petCouple);
-            Integer.parseInt(petCouple);
+            Long.parseLong(petCouple);
         }catch (Exception e){
             sendGroupMsg(messageEventParam.getGroup_id(),"格式错误~",false);
             return;

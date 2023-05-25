@@ -22,7 +22,8 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
-import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
+import static com.sipc.api.apiUtil.SendMsgUtil.sendPrivateMsg;
+import static com.sipc.api.apiUtil.SendPictureUtil.sendGroupPicture;
 
 @Service
 public class ChatGptServiceImpl implements ChatGptService {
@@ -30,7 +31,6 @@ public class ChatGptServiceImpl implements ChatGptService {
     private String openaiKey;
     @Override
     public void chatGptMsg(MessageEventParam messageEventParam) {
-        System.out.println(messageEventParam);
         String msgParam = messageEventParam.getMessage().replace("/tk","");
 
         //国内访问需要做代理，国外服务器不需要
@@ -61,7 +61,11 @@ public class ChatGptServiceImpl implements ChatGptService {
         chatCompletionResponse.getChoices().forEach(e -> {
             msg.append(e.getMessage().getContent());
         });
-        sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(msg),false );
+        if(messageEventParam.getGroup_id()!=0){
+            sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(msg),false );
+        }else {
+            sendPrivateMsg(messageEventParam.getUser_id(), String.valueOf(msg),false);
+        }
     }
 
     @Override
@@ -92,6 +96,6 @@ public class ChatGptServiceImpl implements ChatGptService {
         ImageResponse imageResponse = openAiClient.genImages(hint);
         String picUrl = imageResponse.getData().get(0).getUrl();
         LocalDateTime now = LocalDateTime.now();
-        sendPicture(now.toString(),picUrl, messageEventParam.getGroup_id(),hint ,false);
+        sendGroupPicture(now.toString(),picUrl, messageEventParam.getGroup_id(),hint ,false);
     }
 }

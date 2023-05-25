@@ -19,7 +19,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
-import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
+import static com.sipc.api.apiUtil.SendMsgUtil.sendPrivateMsg;
+import static com.sipc.api.apiUtil.SendPictureUtil.sendGroupPicture;
+import static com.sipc.api.apiUtil.SendPictureUtil.sendPrivatePicture;
 import static com.sipc.common.eventCommon.FunParam.PICTURE_URL;
 import static com.sipc.common.eventCommon.FunParam.RANDOMPIC_FALSE;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
@@ -61,7 +63,11 @@ public class RandomPictureServiceImpl implements RandomPictureService {
             tag = tag.replaceAll("amp;", "");
             List<String> tagList = List.of(tag.split("，"));
             if (tagList.size() > 3) {
-                sendGroupMsg(messageEventParam.getGroup_id(), "参数有误", false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), "参数有误",false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), "参数有误",false);
+                }
             } else {
                 StringBuilder sb = new StringBuilder();
                 sb.append("?");
@@ -83,7 +89,11 @@ public class RandomPictureServiceImpl implements RandomPictureService {
         }
             boolean  isGetPicture = true;
             if(randomPictureParam.getData().size()==0){
-                sendGroupMsg(messageEventParam.getGroup_id(), "未找到图片",false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), "未找到图片",false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), "未找到图片",false);
+                }
                 isGetPicture = false;
             }
             if(isGetPicture){
@@ -101,8 +111,18 @@ public class RandomPictureServiceImpl implements RandomPictureService {
                     }
                 }
                 msg.append("\n");
-                if(sendPicture(fileName,pictureUrl, messageEventParam.getGroup_id(), String.valueOf(msg),false)==RANDOMPIC_FALSE){
-                    sendGroupMsg(messageEventParam.getGroup_id(),"图片发送失败",false);
+                int resCode ;
+                if(messageEventParam.getGroup_id()!=0){
+                    resCode = sendGroupPicture(fileName,pictureUrl, messageEventParam.getGroup_id(), String.valueOf(msg),false);
+                }else {
+                    resCode = sendPrivatePicture(fileName,pictureUrl, messageEventParam.getUser_id(), String.valueOf(msg),false);
+                }
+                if(resCode==RANDOMPIC_FALSE){
+                    if(messageEventParam.getGroup_id()!=0){
+                        sendGroupMsg(messageEventParam.getGroup_id(), "图片发送失败",false );
+                    }else {
+                        sendPrivateMsg(messageEventParam.getUser_id(), "图片发送失败",false);
+                    }
                 }
             }
         }

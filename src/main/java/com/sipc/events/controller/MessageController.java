@@ -7,6 +7,10 @@ import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+
 @Controller
 public class MessageController {
     @Autowired
@@ -14,8 +18,10 @@ public class MessageController {
     @Autowired
     private DiodeBotService diodeBotService;
     public void messageHandler(MessageEventParam messageEventParam) {
+        Date currentTime = new Date();
+        String date = currentTime.toString();
         messageEventParam.setMessage(messageEventParam.getMessage().replaceAll("\\s",""));
-        System.out.println("message received :\n"+messageEventParam.getMessage());
+        System.out.println(date+" "+"message received :\n"+messageEventParam.getMessage());
         messageEventParam.setMessage(ZhConverterUtil.toSimple(messageEventParam.getMessage()));
         if (messageEventParam.getMessage().startsWith("/")){
             customFunController.CustomFunHandler(messageEventParam);

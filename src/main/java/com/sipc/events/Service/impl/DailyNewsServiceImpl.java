@@ -9,6 +9,7 @@ import com.sipc.events.entity.param.MessageEventParam;
 import org.springframework.stereotype.Service;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
+import static com.sipc.api.apiUtil.SendMsgUtil.sendPrivateMsg;
 import static com.sipc.common.eventCommon.FunParam.NEWS_URL;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
@@ -28,6 +29,10 @@ public class DailyNewsServiceImpl implements DailyNewsService {
         for(TopStoriesData topStoriesData: dailyNewsParam.getTop_stories()){
             param.append(topStoriesData.getTitle()).append("\n").append(topStoriesData.getShare_url()).append("\n");
         }
-        sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(param), false);
+        if(messageEventParam.getGroup_id()!=0){
+            sendGroupMsg(messageEventParam.getGroup_id(), String.valueOf(param),false );
+        }else {
+            sendPrivateMsg(messageEventParam.getUser_id(), String.valueOf(param),false);
+        }
     }
 }

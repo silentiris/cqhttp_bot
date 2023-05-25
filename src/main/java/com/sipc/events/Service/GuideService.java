@@ -4,8 +4,10 @@ import com.sipc.events.entity.param.MessageEventParam;
 
 public interface GuideService {
     void globalGuide(MessageEventParam messageEventParam);
-    void randomPictureGenerateGuide(int group_id);
-    void weatherGuide(int group_id);
-    void petGuide(int group_id);
-    void petRuleGuide(int group_id);
+    void randomPictureGenerateGuide(MessageEventParam messageEventParam);
+    void weatherGuide(MessageEventParam messageEventParam);
+    void petGuide(MessageEventParam messageEventParam);
+    void petRuleGuide(MessageEventParam messageEventParam);
+
+    void driftingBottleGuide(MessageEventParam messageEventParam);
 }

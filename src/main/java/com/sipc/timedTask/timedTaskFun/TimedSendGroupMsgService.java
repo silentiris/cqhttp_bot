@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import static com.sipc.api.apiUtil.GetGroupListUtil.getGroupList;
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
-import static com.sipc.api.apiUtil.SendPictureUtil.sendPicture;
+import static com.sipc.api.apiUtil.SendPictureUtil.sendGroupPicture;
 import static com.sipc.common.eventCommon.FunParam.WEATHER_URL;
 import static com.sipc.common.timedTaskCommon.TimedTaskFunCommon.*;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
@@ -47,7 +47,7 @@ public class TimedSendGroupMsgService {
         msg.append("祝您度过美好的一天，心情愉悦！"+"\n");
         BingPicParam bingPicParam = JSONObject.parseObject(sendHttpRequest(BINGPIC_URL,true), BingPicParam.class);
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
-            sendPicture(date+"bingPic",bingPicParam.getData().getUrl(), groupInfo.getGroup_id(), String.valueOf(msg),false);
+            sendGroupPicture(date+"bingPic",bingPicParam.getData().getUrl(), groupInfo.getGroup_id(), String.valueOf(msg),false);
         }
     }
     public void sendNightGroupMsg(){
@@ -61,7 +61,7 @@ public class TimedSendGroupMsgService {
         LocalDate date = now.toLocalDate();
         String newsUrl = sendHttpRequest(QUICKNEWS_URL,false);
         for(GroupInfo groupInfo: Objects.requireNonNull(getGroupList())){
-            sendPicture(date.toString()+" 60sNews",newsUrl, groupInfo.getGroup_id(), String.valueOf(msg),false);
+            sendGroupPicture(date.toString()+" 60sNews",newsUrl, groupInfo.getGroup_id(), String.valueOf(msg),false);
         }
     }
     public void sendHourlyMsg(){

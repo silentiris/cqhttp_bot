@@ -10,6 +10,7 @@ import com.sipc.events.entity.param.WeatherParam.Week.WeekWeatherParam;
 import org.springframework.stereotype.Service;
 
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
+import static com.sipc.api.apiUtil.SendMsgUtil.sendPrivateMsg;
 import static com.sipc.common.eventCommon.FunParam.WEATHER_FALSE;
 import static com.sipc.common.eventCommon.FunParam.WEATHER_URL;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
@@ -24,12 +25,20 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
             isWeek = true;
             String[] paramList = message.split("，");
             if (paramList.length > 2) {
-                sendGroupMsg(messageEventParam.getGroup_id(), "参数有误！", false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), "参数有误！",false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), "参数有误！",false);
+                }
             } else {
                 city = paramList[0];
                 week = paramList[1];
                 if(null==week||week.equals(" ")){
-                    sendGroupMsg(messageEventParam.getGroup_id(), "日期参数不能为空！", false);
+                    if(messageEventParam.getGroup_id()!=0){
+                        sendGroupMsg(messageEventParam.getGroup_id(), "日期参数不能为空！",false );
+                    }else {
+                        sendPrivateMsg(messageEventParam.getUser_id(), "日期参数不能为空！",false);
+                    }
                 }
             }
         } else {
@@ -42,7 +51,11 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
             isGetWeather = true;
             TodayWeatherParam todayWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL + param,true), TodayWeatherParam.class);
             if (todayWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
-                sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市",false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), "查询失败,仅支持国内主要省,精确到城市",false);
+                }
                 isGetWeather = false;
             }
             if (isGetWeather) {
@@ -57,14 +70,22 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                         .append("PM2.5: ").append(todayWeatherInfo.getAir().getPm25()).append("\n");
                 returnparam.append("tip:").append(todayWeatherInfo.getTip());
                 String s = String.valueOf(returnparam).replace("-"," ");
-                sendGroupMsg(messageEventParam.getGroup_id(), s, false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), s,false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), s,false);
+                }
             }
         } else {
             StringBuilder param = new StringBuilder("?city=" + city + "&type=week");
             WeekWeatherParam weekWeatherParam = JSONObject.parseObject(sendHttpRequest(WEATHER_URL+param,true), WeekWeatherParam.class);
             boolean isGetWeather = true;
             if (weekWeatherParam.getSuccess().equals(WEATHER_FALSE)) {
-                sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市", false);
+                if(messageEventParam.getGroup_id()!=0){
+                    sendGroupMsg(messageEventParam.getGroup_id(), "查询失败,仅支持国内主要省,精确到城市",false );
+                }else {
+                    sendPrivateMsg(messageEventParam.getUser_id(), "查询失败,仅支持国内主要省,精确到城市",false);
+                }
                 isGetWeather = false;
             }
             if (isGetWeather) {
@@ -77,7 +98,11 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                         }
                     }
                     if (null == weekWeatherData) {
-                        sendGroupMsg(messageEventParam.getGroup_id(), "星期的天数输入有误。请按照标准格式输入。", false);
+                        if(messageEventParam.getGroup_id()!=0){
+                            sendGroupMsg(messageEventParam.getGroup_id(), "星期的天数输入有误。请按照标准格式输入。",false );
+                        }else {
+                            sendPrivateMsg(messageEventParam.getUser_id(), "星期的天数输入有误。请按照标准格式输入。",false);
+                        }
                     } else {
                         StringBuilder returnparam = new StringBuilder();
                         returnparam.append(weekWeatherData.getDate()).append(" ")
@@ -87,7 +112,11 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                                 .append("最高:").append(weekWeatherData.getHigh()).append("，")
                                 .append("风力：").append(weekWeatherData.getFengli());
                         String s = String.valueOf(returnparam).replace("-"," ");
-                        sendGroupMsg(messageEventParam.getGroup_id(), s, false);
+                        if(messageEventParam.getGroup_id()!=0){
+                            sendGroupMsg(messageEventParam.getGroup_id(), s,false );
+                        }else {
+                            sendPrivateMsg(messageEventParam.getUser_id(), s,false);
+                        }
                     }
                 }else {
                     StringBuilder returnParam = new StringBuilder();
@@ -101,7 +130,11 @@ public class QueryWeatherServiceImpl implements QueryWeatherService {
                                 .append("风力：").append(weekWeatherData.getFengli()).append("\n");
                     }
                     String s = String.valueOf(returnParam).replace("-"," ");
-                    sendGroupMsg(messageEventParam.getGroup_id(), s, false);
+                    if(messageEventParam.getGroup_id()!=0){
+                        sendGroupMsg(messageEventParam.getGroup_id(), s,false );
+                    }else {
+                        sendPrivateMsg(messageEventParam.getUser_id(), s,false);
+                    }
                 }
             }
         }

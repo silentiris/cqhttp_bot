@@ -1,7 +1,10 @@
 package com.sipc.events.Util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sipc.events.entity.param.MessageEventParam;
+import com.sipc.events.entity.param.Sender;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ParamConvertUtil {
@@ -18,7 +21,10 @@ public class ParamConvertUtil {
             messageEventParam.setUser_id(integerId.longValue());
         }
         messageEventParam.setMessage((String) paramMap.get("message"));
-        messageEventParam.setGroup_id((Integer) paramMap.get("group_id"));
+        try{
+            messageEventParam.setGroup_id((Integer) paramMap.get("group_id"));
+        }catch (Exception ignored){}
+        messageEventParam.setSender(new Sender((String)((Map)(paramMap.get("sender"))).get("nickname")));
         return messageEventParam;
     }
 }

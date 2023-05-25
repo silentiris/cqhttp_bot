@@ -12,5 +12,6 @@ public class MessageEventParam {
     private String raw_message;
     private int front;
     private int group_id;
+    private Sender sender;
 
 }
