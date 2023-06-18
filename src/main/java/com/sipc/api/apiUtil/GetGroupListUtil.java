@@ -5,6 +5,7 @@ import com.sipc.api.entity.result.GroupInfo;
 import com.sipc.api.entity.result.getGroupListParam.GetGroupListResult;
 import com.sipc.events.entity.param.WeatherParam.Today.TodayWeatherParam;
 import jakarta.servlet.http.PushBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-
+@Slf4j
 public class GetGroupListUtil {
     public static List<GroupInfo> getGroupList(){
         try {
@@ -29,7 +30,7 @@ public class GetGroupListUtil {
             String response = responseBuilder.toString();
             return JSONObject.parseObject(response, GetGroupListResult.class).getData();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("GetGroupListUtil err!");
         }
         return null;
     }

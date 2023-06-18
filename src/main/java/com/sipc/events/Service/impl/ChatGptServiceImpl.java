@@ -10,6 +10,7 @@ import com.unfbx.chatgpt.entity.chat.Message;
 import com.unfbx.chatgpt.entity.images.ImageResponse;
 import com.unfbx.chatgpt.function.KeyRandomStrategy;
 import com.unfbx.chatgpt.interceptor.OpenAiResponseInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,14 @@ import java.util.concurrent.TimeUnit;
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
 import static com.sipc.api.apiUtil.SendMsgUtil.sendPrivateMsg;
 import static com.sipc.api.apiUtil.SendPictureUtil.sendGroupPicture;
-
+@Slf4j
 @Service
 public class ChatGptServiceImpl implements ChatGptService {
     @Value("${openai.key}")
     private String openaiKey;
     @Override
     public void chatGptMsg(MessageEventParam messageEventParam) {
-        String msgParam = messageEventParam.getMessage().replace("/tk","");
+        String msgParam = messageEventParam.getMessage().replace("/tk","").trim();
 
         //国内访问需要做代理，国外服务器不需要
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890));
@@ -70,7 +71,7 @@ public class ChatGptServiceImpl implements ChatGptService {
 
     @Override
     public void aiDraw(MessageEventParam messageEventParam) {
-        String hint = messageEventParam.getMessage().replace("/aipic","");
+        String hint = messageEventParam.getMessage().replace("/aipic","").trim();
         System.out.println(messageEventParam);
         String msgParam = messageEventParam.getMessage().replace("/tk","");
         //国内访问需要做代理，国外服务器不需要
@@ -93,7 +94,17 @@ public class ChatGptServiceImpl implements ChatGptService {
                 //自己做了代理就传代理地址，没有可不不传
 //                .apiHost("https://自己代理的服务器地址/")
                 .build();
-        ImageResponse imageResponse = openAiClient.genImages(hint);
+        ImageResponse imageResponse;
+        try{
+             imageResponse = openAiClient.genImages(hint);
+        }catch (Exception e){
+            if(messageEventParam.getGroup_id()!=0){
+                sendGroupMsg(messageEventParam.getGroup_id(),e.getMessage(),false );
+            }else {
+                sendPrivateMsg(messageEventParam.getUser_id(), e.getMessage(),false);
+            }
+            return;
+        }
         String picUrl = imageResponse.getData().get(0).getUrl();
         LocalDateTime now = LocalDateTime.now();
         sendGroupPicture(now.toString(),picUrl, messageEventParam.getGroup_id(),hint ,false);

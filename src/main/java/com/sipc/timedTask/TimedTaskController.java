@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TimedTask implements Runnable {
+public class TimedTaskController implements Runnable {
     @Autowired
     private TimedSendGroupMsgService timedSendGroupMsgService;
     @Scheduled(cron = "30 0 8 * * ?")

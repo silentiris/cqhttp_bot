@@ -3,12 +3,14 @@ package com.sipc.api.apiUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.sipc.api.entity.groupMemberInfoParam.GroupMemberInfoData;
 import com.sipc.api.entity.groupMemberInfoParam.GroupMemberInfoParam;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+@Slf4j
 public class GetGroupInfoUtil {
     public static GroupMemberInfoParam getGroupMemberInfo(int group_id,long user_id,boolean no_cache){
         StringBuilder sb = new StringBuilder();
@@ -29,7 +31,7 @@ public class GetGroupInfoUtil {
             String response = responseBuilder.toString();
             return JSONObject.parseObject(response, GroupMemberInfoData.class).getData();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("GetGroupInfoUtil err!");
             return null;
         }
     }

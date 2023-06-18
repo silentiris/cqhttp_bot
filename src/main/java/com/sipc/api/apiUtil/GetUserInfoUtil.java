@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.sipc.api.entity.groupMemberInfoParam.GroupMemberInfoData;
 import com.sipc.api.entity.userInfoParam.UserInfoData;
 import com.sipc.api.entity.userInfoParam.UserInfoParam;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+@Slf4j
 public class GetUserInfoUtil {
     public static UserInfoParam getUserInfo(long user_id,boolean no_cache){
         StringBuilder sb = new StringBuilder();
@@ -29,7 +30,7 @@ public class GetUserInfoUtil {
             String response = responseBuilder.toString();
             return JSONObject.parseObject(response, UserInfoData.class).getData();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("GetUserInfoUtil err!");
             return null;
         }
     }

@@ -4,10 +4,12 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.http.Method;
+import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
+@Slf4j
 @Component
 public class MinioUtil {
     @Value("${minio.endpoint}")
@@ -100,7 +102,7 @@ public class MinioUtil {
                             .expiry(5, TimeUnit.MINUTES)
                             .build());
         } catch (Exception e) {
-            System.out.println("err!!!");
+            log.error("minio error!!!");
         }
         return url;
     }

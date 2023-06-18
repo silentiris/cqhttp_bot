@@ -18,7 +18,8 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 public class QueryWeatherServiceImpl implements QueryWeatherService {
     public void queryWeather(MessageEventParam messageEventParam) {
         boolean isWeek = false;
-        String message = messageEventParam.getMessage().substring(messageEventParam.getMessage().indexOf("天气") + 2);
+        String message = messageEventParam.getMessage().substring(messageEventParam.getMessage().indexOf("天气") + 2).trim();
+        message = message.trim();
         String city = null;
         String week = null;
         if (message.contains("，")) {

@@ -2,6 +2,7 @@ package com.sipc.common.utilCommon;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sipc.timedTask.entity.dailyProverbParam.DailyProverbParam;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.sipc.common.timedTaskCommon.TimedTaskFunCommon.DAILYPROVERB_URL;
-
+@Slf4j
 public class SendHttpRequestUtil {
     public static String sendHttpRequest(String urlParam,boolean autoJump){
         try {
@@ -23,13 +24,6 @@ public class SendHttpRequestUtil {
             connection.setRequestProperty("Content-Type", "text/json;charset=utf-8");
             // 获取响应头
             Map<String, List<String>> headers = connection.getHeaderFields();
-            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                String key = entry.getKey();
-                List<String> values = entry.getValue();
-                for (String value : values) {
-                    System.out.println(key + ": " + value);
-                }
-            }
             // 读取响应内容
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder responseBuilder = new StringBuilder();
@@ -39,14 +33,14 @@ public class SendHttpRequestUtil {
             }
             reader.close();
             String response = responseBuilder.toString();
-            System.out.println("Response: " + response);
+            log.info(response);
             if(autoJump){
                 return response;
             }else {
                 return headers.get("Location").get(0);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("http request err!");
             return null;
         }
     }

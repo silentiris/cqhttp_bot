@@ -27,6 +27,8 @@ public class CustomFunController {
     private TimedSendGroupMsgService timedSendGroupMsgService;
     @Autowired
     private DriftingBottleService driftingBottleService;
+    @Autowired
+    private SqlService sqlService;
 
     public void CustomFunHandler(MessageEventParam messageEventParam){
         String msg = messageEventParam.getMessage();
@@ -89,6 +91,8 @@ public class CustomFunController {
             driftingBottleService.selectComments(messageEventParam);
         }else if(msg.startsWith("/bottlehelp")){
             guideService.driftingBottleGuide(messageEventParam);
+        }else if(msg.startsWith("/sql")){
+            sqlService.selectSql(messageEventParam);
         }
     }
 }

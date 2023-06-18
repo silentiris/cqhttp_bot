@@ -46,7 +46,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
     @Override
     public void throwBottle(MessageEventParam messageEventParam) {
         String message = messageEventParam.getMessage();
-        message = message.replace("/throw","");
+        message = message.replace("/throw","").trim();
         String bottleMsg = message ;
         String picUrl = null;
         long throwerId = messageEventParam.getUser_id();
@@ -121,11 +121,11 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
     @Override
     public void addBottleComment(MessageEventParam messageEventParam) {
         String message = messageEventParam.getMessage();
-        message = message.replace("/cmt","");
+        message = message.replace("/cmt","").trim();
         int bottleId = -1;
         //检验是否输入了正确的数字
         try{
-            bottleId = Integer.parseInt(message.substring(0,message.indexOf('/')));
+            bottleId = Integer.parseInt(message.substring(0,message.indexOf('/')).trim());
 
         }catch (Exception e){
             if(messageEventParam.getGroup_id()!=0){
@@ -148,7 +148,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
             return;
         }
 
-        String commentMsg = message.replace(message.substring(0,message.indexOf('/')+1),"") ;
+        String commentMsg = message.replace(message.substring(0,message.indexOf('/')+1),"").trim() ;
         String picUrl = null;
         long throwerId = messageEventParam.getUser_id();
         boolean isGroup = messageEventParam.getGroup_id()!=0;
@@ -165,7 +165,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
             }
         }
         if(message.contains("[CQ:image,")){
-            commentMsg = commentMsg.substring(0,message.indexOf("[CQ:image,")-3);
+            commentMsg = commentMsg.substring(0,message.indexOf("[CQ:image,")-3).trim();
             picUrl = message.substring(message.indexOf(",url=")+",url=".length(),message.length()-1);
             fileName = minioUtil.uploadFileWithNetFile(picUrl);
         }
@@ -192,7 +192,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
     @Override
     public void selectComments(MessageEventParam messageEventParam) {
         String message = messageEventParam.getMessage();
-        message = message.replace("/showcmt","");
+        message = message.replace("/showcmt","").trim();
         int bottleId ;
         //检验是否输入了正确的数字
         try{

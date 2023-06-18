@@ -30,7 +30,7 @@ public class RandomPictureServiceImpl implements RandomPictureService {
     public void RandomPicture(MessageEventParam messageEventParam){
         RandomPictureParam randomPictureParam = null;
         if(messageEventParam.getMessage().startsWith("/picjson")){
-            String jsonParam = messageEventParam.getMessage().replace("/picjson","");
+            String jsonParam = messageEventParam.getMessage().replace("/picjson","").trim();
             jsonParam = StringEscapeUtils.unescapeHtml4(jsonParam);
             System.out.println(jsonParam);
             try {
@@ -59,7 +59,7 @@ public class RandomPictureServiceImpl implements RandomPictureService {
             }
         }else {
             String tag = messageEventParam.getMessage();
-            tag = tag.substring(tag.indexOf("c") + 1);
+            tag = tag.substring(tag.indexOf("c") + 1).trim();
             tag = tag.replaceAll("amp;", "");
             List<String> tagList = List.of(tag.split("，"));
             if (tagList.size() > 3) {
