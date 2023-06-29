@@ -32,6 +32,7 @@ public class ChatGptServiceImpl implements ChatGptService {
     private String openaiKey;
     @Override
     public void chatGptMsg(MessageEventParam messageEventParam) {
+
         String msgParam = messageEventParam.getMessage().replace("/tk","").trim();
 
         //国内访问需要做代理，国外服务器不需要

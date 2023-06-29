@@ -3,6 +3,8 @@ package com.sipc.api.apiUtil;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
@@ -16,6 +18,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 @Slf4j
@@ -106,4 +110,17 @@ public class MinioUtil {
         }
         return url;
     }
+    public int removeObject(String objectName){
+        MinioClient minioClient =
+                MinioClient.builder()
+                        .endpoint(endpoint)
+                        .credentials(accessKey, secretKey)
+                        .build();
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(bucket).object(objectName).build());
+        } catch (Exception ignored) {}
+        return 1;
+    }
+
 }

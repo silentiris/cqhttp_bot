@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.sipc.api.apiUtil.GetGroupListUtil.getGroupList;
 import static com.sipc.api.apiUtil.SendMsgUtil.sendGroupMsg;
@@ -56,16 +58,16 @@ public class TimedSendGroupMsgService {
     }
     public void sendNightGroupMsg(){
         StringBuilder msg = new StringBuilder();
-        msg.append("现在是22:00,晚安！").append("\n").append("\n")
+        msg.append("现在是22:00,晚安！").append("\n")
             .append("每日一言： ").append("\n")
-                .append(sendHttpRequest(SINGLEDAILYPROVERB_URL,true)).append("\n").append("\n")
+                .append(sendHttpRequest(SINGLEDAILYPROVERB_URL,true)).append("\n")
                 .append("祝您一晚好梦！");
         LocalDateTime now = LocalDateTime.now();
         LocalDate date = now.toLocalDate();
         BingPicParam bingPicParam = JSONObject.parseObject(sendHttpRequest(BINGPIC_URL,true), BingPicParam.class);
         String finalDate = String.valueOf(date);
         getUnmutedGroupUtil.getUnmutedGroup().stream().forEach(
-                p-> sendGroupPicture(finalDate +"bingPic", String.valueOf(bingPicParam),p, String.valueOf(msg),false));
+                p-> sendGroupPicture(finalDate +"bingPic", String.valueOf(bingPicParam.getData().getUrl()),p, String.valueOf(msg),false));
     }
     public void sendHourlyMsg(){
         LocalDateTime now = LocalDateTime.now();

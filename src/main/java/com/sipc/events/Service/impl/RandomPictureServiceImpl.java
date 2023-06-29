@@ -1,11 +1,14 @@
 package com.sipc.events.Service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sipc.api.apiUtil.MinioUtil;
 import com.sipc.events.Service.RandomPictureService;
 import com.sipc.events.entity.param.MessageEventParam;
 import com.sipc.events.entity.param.randomPictureParam.RandomPictureData;
 import com.sipc.events.entity.param.randomPictureParam.RandomPictureParam;
 import org.apache.commons.text.StringEscapeUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -27,6 +30,8 @@ import static com.sipc.common.eventCommon.FunParam.RANDOMPIC_FALSE;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
 public class RandomPictureServiceImpl implements RandomPictureService {
+    @Autowired
+    MinioUtil minioUtil;
     public void RandomPicture(MessageEventParam messageEventParam){
         RandomPictureParam randomPictureParam = null;
         if(messageEventParam.getMessage().startsWith("/picjson")){
