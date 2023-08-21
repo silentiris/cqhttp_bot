@@ -14,6 +14,7 @@ import static com.sipc.common.eventCommon.FunParam.NEWS_URL;
 import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
 public class DailyNewsServiceImpl implements DailyNewsService {
+    @Override
     public void dailyNews(MessageEventParam messageEventParam) {
         String json= sendHttpRequest(NEWS_URL,true);
         assert json != null;

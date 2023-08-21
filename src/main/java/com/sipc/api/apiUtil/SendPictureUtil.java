@@ -11,6 +11,11 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Slf4j
 public class SendPictureUtil {
     public static int sendGroupPicture(String fileName,String pictureUrl,int group_id,String message,boolean auto_escape) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder sendMsgParam = new StringBuilder();
         sendMsgParam.append(message);
         sendMsgParam.append("[CQ:image,file=").append(fileName).append(",subType=0,url=").append(pictureUrl).append("]");
@@ -27,6 +32,11 @@ public class SendPictureUtil {
         }
     }
     public static int sendPrivatePicture(String fileName,String pictureUrl,long user_id,String message,boolean auto_escape) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder sendMsgParam = new StringBuilder();
         sendMsgParam.append(message);
         sendMsgParam.append("[CQ:image,file=").append(fileName).append(",subType=0,url=").append(pictureUrl).append("]");

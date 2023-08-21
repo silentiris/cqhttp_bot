@@ -29,8 +29,8 @@ public class GlobalController {
         }
     }
 
-    @PostMapping("/weibo")
-    public void weiboController(@RequestBody WeiboParam weiboParam) {
-        weiboService.syncWeibo(weiboParam);
-    }
+//    @PostMapping("/weibo")
+//    public void weiboController(@RequestBody WeiboParam weiboParam) {
+//        weiboService.syncWeibo(weiboParam);
+//    }
 }

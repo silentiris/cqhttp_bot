@@ -14,6 +14,11 @@ import static com.sipc.common.utilCommon.SendHttpRequestUtil.sendHttpRequest;
 @Service
 public class SendMsgUtil {
     public static int sendGroupMsg(int group_id,String message,boolean auto_escape) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         //拼接请求参数
         StringBuilder sb = new StringBuilder();
         sb.append("group_id=").append(group_id);
@@ -30,6 +35,11 @@ public class SendMsgUtil {
         }
     }
     public static int sendPrivateMsg(long user_id,String message,boolean auto_escape){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("user_id=").append(user_id);
         sb.append("&message=").append(URLEncoder.encode(message, StandardCharsets.UTF_8));

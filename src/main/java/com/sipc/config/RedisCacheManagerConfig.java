@@ -13,11 +13,13 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +42,11 @@ public class RedisCacheManagerConfig {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(mapper, Object.class);
 
         template.setValueSerializer(serializer);
-        //使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.afterPropertiesSet();
+
         return template;
     }
 
@@ -55,18 +59,23 @@ public class RedisCacheManagerConfig {
 
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
-        redisCacheConfigurationMap.put("code", this.getRedisCacheConfigurationWithTtl(5));
-        redisCacheConfigurationMap.put("tag", this.getRedisCacheConfigurationWithTtl(10));
+        redisCacheConfigurationMap.put("sessionId", this.getRedisCacheConfigurationWithTtl(Duration.of(1, ChronoUnit.DAYS)));
         return redisCacheConfigurationMap;
     }
 
-    private RedisCacheConfiguration getRedisCacheConfigurationWithTtl(Integer minute) {
+    /**
+     * 设置带过期时间的配置类
+     * 使用类似Duration.of(1, ChronoUnit.DAYS)来传过期时间，如果传Duration.ZERO则永不过期
+     * @param ttl
+     * @return {@code RedisCacheConfiguration}
+     */
+    private RedisCacheConfiguration getRedisCacheConfigurationWithTtl(Duration ttl) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(mapper, Object.class);
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
-        redisCacheConfiguration = redisCacheConfiguration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer)).entryTtl(Duration.ofMinutes(minute));
+        redisCacheConfiguration = redisCacheConfiguration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer)).entryTtl(ttl);
         return redisCacheConfiguration;
     }
 }

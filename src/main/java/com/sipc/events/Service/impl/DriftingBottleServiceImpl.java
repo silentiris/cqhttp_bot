@@ -149,7 +149,7 @@ public class DriftingBottleServiceImpl implements DriftingBottleService {
         }
 
         String commentMsg = message.replace(message.substring(0,message.indexOf('/')+1),"").trim() ;
-        String picUrl = null;
+        String picUrl;
         long throwerId = messageEventParam.getUser_id();
         boolean isGroup = messageEventParam.getGroup_id()!=0;
         int groupId = messageEventParam.getGroup_id();

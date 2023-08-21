@@ -19,12 +19,16 @@ public class MessageController {
     private CustomFunController customFunController;
     @Autowired
     private DiodeBotService diodeBotService;
+    @Autowired
+    private ChatGptService chatGptService;
     public void messageHandler(MessageEventParam messageEventParam) {
         log.info("received:{}",messageEventParam.getMessage());
         messageEventParam.setMessage(ZhConverterUtil.toSimple(messageEventParam.getMessage()));
         if (messageEventParam.getMessage().startsWith("/")){
             customFunController.CustomFunHandler(messageEventParam);
         }
-        diodeBotService.diodeBot(messageEventParam);
+        if(messageEventParam.getGroup_id()!=794097609){
+            diodeBotService.diodeBot(messageEventParam);
+        }
     }
 }
